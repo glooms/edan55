@@ -1,40 +1,43 @@
 import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.HashSet;
 import java.util.Random;
 import java.util.Collections;
 import java.lang.StringBuilder;
 
 public class Tree {
 
-	private final int N; //Might crash if not complete binary tree.
-	private boolean[] nodes; 
-	private ArrayList<Integer> unmarked;
+	private final int N;
+	private boolean[] nodes;
+	private HashSet<Integer> unmarked;
 
 	public Tree(int depth) {
 		N = (1 << depth) - 1;
 		nodes = new boolean[N + 1];
-		unmarked = new ArrayList<Integer>();
+		unmarked = new HashSet<Integer>();
 		for(int i = 1; i <= N; i++)
 			unmarked.add(i);
 	}
 
-	public void mark(int index) {
+	public boolean mark(int index) {
 		if (nodes[index])
-			return;
+			return false;
 		markDown(index);
 		markUp(index / 2);
+		return true;
 	}
 
-	
+
 	private void markUp(int index) {
 		if (index == 0)
 			return;
 		int c1, c2;
 		c1 = index * 2;
 		c2 = c1 + 1;
-		if (nodes[index])
+		if (nodes[index]) {
 			markDown(index);
-		if (nodes[c1] && nodes[c2] && !nodes[index]) {
+		} else if (nodes[c1] && nodes[c2]) {
 			markNode(index);
 			markUp(index / 2);
 		}
@@ -42,7 +45,7 @@ public class Tree {
 
 	private void markDown(int index) {
 		markNode(index);
-		
+
 		int c1, c2;
 		c1 = index * 2;
 		c2 = c1 + 1;
@@ -52,12 +55,13 @@ public class Tree {
 			else if (nodes[c2])
 				markDown(c1);
 		}
-		
 	}
 
 	private void markNode(int index) {
-		nodes[index] = true;
-		unmarked.remove((Integer) index);
+		if (!nodes[index]) {
+			nodes[index] = true;
+			unmarked.remove(index);
+		}
 	}
 
 	public String toString() {
@@ -70,14 +74,6 @@ public class Tree {
 
 	public int size() {
 		return N;
-	}
-
-	public int unmarkedSize() {
-		return unmarked.size();
-	}
-
-	public int getUnmarkedNode(int index) {
-		return unmarked.get(index);
 	}
 
 	public boolean halt() {
@@ -115,7 +111,7 @@ public class Tree {
 		}
 		System.out.println("Count: " + count);
 	}
-	
+
 	public static void mode2(int depth){
 		Tree t = new Tree(depth);
 		ArrayList<Integer> order = new ArrayList<Integer>();
@@ -132,18 +128,20 @@ public class Tree {
 		}
 		System.out.println("Count: " + count);
 	}
-	
+
 	public static void mode3(int depth){
 		Tree t = new Tree(depth);
-		Random r = new Random();
+		ArrayList<Integer> order = new ArrayList<Integer>();
+		for (int i = 1; i <= t.size(); i++)
+			order.add(i);
+		Collections.shuffle(order);
 		int count = 0;
 		while (!t.halt()) {
-			count++;
-			int randIndex = r.nextInt(t.unmarkedSize());
-			int index = t.getUnmarkedNode(randIndex);
-			t.mark(index);
-//			System.out.format("%02d: ", index);
-//			System.out.println(t.toString());
+			int index = order.remove(order.size() - 1);
+			if (t.mark(index))
+				count++;
+	//			System.out.format("%02d: ", index);
+	//			System.out.println(t.toString());
 		}
 		System.out.println("Count: " + count);
 	}
