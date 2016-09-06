@@ -82,6 +82,13 @@ public class Tree {
 
 
 	public static void main(String[] args) {
+        if (args.length == 3) {
+            if (args[0].equals("stat")) {
+                int m = Integer.parseInt(args[1]);
+                int n = Integer.parseInt(args[2]);
+                statistics(m, n);
+            }
+        }
 		if (args.length != 2)
 			return;
 		int mode = Integer.parseInt(args[0]);
@@ -98,7 +105,52 @@ public class Tree {
 		}
 	}
 
-	public static void mode1(int depth){
+    public static void statistics(int m, int n) {
+        double[][] dev1, dev2, dev3;
+        dev1 = new double[m][2];
+        dev2 = new double[m][2];
+        dev3 = new double[m][2];
+        double[] a1, a2, a3;
+        for (int i = 2; i <= m; i++) {
+            a1 = new double[n];
+            a2 = new double[n];
+            a3 = new double[n];
+            for (int j = 0; j < n; j++) {
+                a1[j] = mode1(i);
+                a2[j] = mode2(i);
+                a3[j] = mode3(i);
+            }
+            dev1[i - 2] = standardDev(a1);
+            dev2[i - 2] = standardDev(a2);
+            dev3[i - 2] = standardDev(a3);
+        }
+        System.out.println("R1");
+        for (int j = 2; j <= m; j++)
+                System.out.println(j + ":  " + dev1[j - 2][0] + "  +/-  " + dev1[j - 2][1]);
+        System.out.println("R2");
+        for (int j = 2; j <= m; j++)
+                System.out.println(j + ":  " + dev2[j - 2][0] + "  +/-  " + dev2[j - 2][1]);
+        System.out.println("R3");
+        for (int j = 2; j <= m; j++)
+                System.out.println(j + ":  " + dev3[j - 2][0] + "  +/-  " + dev3[j - 2][1]);
+    }
+
+    public static double[] standardDev(double[] a) {
+        double mean, stdDev;
+        int sum = 0;
+        for (int i = 0; i < a.length; i++)
+            sum += a[0];
+        mean = (double) sum / a.length;
+        double temp = 0;
+        for (int i = 0; i < a.length; i++)
+            temp += Math.pow(a[i] - mean, 2);
+        temp /= (a.length - 1);
+        stdDev = Math.sqrt(temp);
+        double[] d = {mean, stdDev};
+        return d;
+    }
+
+	public static double mode1(int depth){
 		Tree t = new Tree(depth);
 		Random r = new Random();
 		int count = 0;
@@ -109,10 +161,11 @@ public class Tree {
 //			System.out.format("%02d: ", index);
 //			System.out.println(t.toString());
 		}
-		System.out.println("Count: " + count);
+//		System.out.println("Count: " + count);
+        return (double) count;
 	}
 
-	public static void mode2(int depth){
+	public static double mode2(int depth){
 		Tree t = new Tree(depth);
 		ArrayList<Integer> order = new ArrayList<Integer>();
 		for (int i = 1; i <= t.size(); i++)
@@ -126,10 +179,11 @@ public class Tree {
 //			System.out.format("%02d: ", index);
 //			System.out.println(t.toString());
 		}
-		System.out.println("Count: " + count);
+//		System.out.println("Count: " + count);
+        return (double) count;
 	}
 
-	public static void mode3(int depth){
+	public static double mode3(int depth){
 		Tree t = new Tree(depth);
 		ArrayList<Integer> order = new ArrayList<Integer>();
 		for (int i = 1; i <= t.size(); i++)
@@ -143,6 +197,7 @@ public class Tree {
 	//			System.out.format("%02d: ", index);
 	//			System.out.println(t.toString());
 		}
-		System.out.println("Count: " + count);
+	//	System.out.println("Count: " + count);
+        return (double) count;
 	}
 }
