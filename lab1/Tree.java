@@ -6,6 +6,9 @@ import java.util.Random;
 import java.util.Collections;
 import java.lang.StringBuilder;
 
+import java.math.MathContext;
+import java.math.BigDecimal;
+
 public class Tree {
 
 	private final int N;
@@ -124,6 +127,16 @@ public class Tree {
             dev2[i - 2] = standardDev(a2);
             dev3[i - 2] = standardDev(a3);
         }
+        int N;
+        for (int j = 2; j <= m; j++) {
+            N = (int) Math.pow(2, j) - 1;
+            System.out.print(N + " & ");
+            System.out.print(dev1[j - 2][0] + " \\pm " + dev1[j - 2][1] + " & ");
+            System.out.print(dev2[j - 2][0] + " \\pm " + dev2[j - 2][1] + " & ");
+            System.out.println(dev3[j - 2][0] + " \\pm " + dev3[j - 2][1] + " \\\\");
+        }
+
+        /*
         System.out.println("R1");
         for (int j = 2; j <= m; j++)
                 System.out.println(j + ":  " + dev1[j - 2][0] + "  +/-  " + dev1[j - 2][1]);
@@ -132,7 +145,7 @@ public class Tree {
                 System.out.println(j + ":  " + dev2[j - 2][0] + "  +/-  " + dev2[j - 2][1]);
         System.out.println("R3");
         for (int j = 2; j <= m; j++)
-                System.out.println(j + ":  " + dev3[j - 2][0] + "  +/-  " + dev3[j - 2][1]);
+                System.out.println(j + ":  " + dev3[j - 2][0] + "  +/-  " + dev3[j - 2][1]); */
     }
 
     public static double[] standardDev(double[] a) {
@@ -145,9 +158,19 @@ public class Tree {
         for (int i = 0; i < a.length; i++)
             temp += Math.pow(a[i] - mean, 2);
         temp /= (a.length - 1);
-        stdDev = Math.sqrt(temp);
+        stdDev = round(Math.sqrt(temp), 1);
+        if (stdDev != 0) {
+                int digits = (int) Math.log10(mean / stdDev) + 1;
+                mean = round(mean, digits);
+        }
         double[] d = {mean, stdDev};
         return d;
+    }
+
+    private static double round(double d, int digits) {
+        BigDecimal bd = new BigDecimal(d);
+        bd = bd.round(new MathContext(digits));
+        return bd.doubleValue();
     }
 
 	public static double mode1(int depth){
