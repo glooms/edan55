@@ -1,6 +1,9 @@
 import io
 import sys
+import math
 from random import randint
+
+maxcuts = []
 
 for i in range(0, int(sys.argv[2])):
 
@@ -16,4 +19,20 @@ for i in range(0, int(sys.argv[2])):
             nodes[t[1]] = randint(1, 2)
         if nodes[t[0]] != nodes[t[1]] :
             maxcut += t[2]
-    print maxcut
+    maxcuts += [maxcut]
+#    print maxcut
+
+mean = sum(maxcuts) / int(sys.argv[2])
+
+def std_dev(l, m) :
+    s = 0
+    for i in l :
+        s += (i - m)**2
+    s = float(s)
+    N = float(sys.argv[2])
+    dev = math.sqrt(s / (N - 1))
+    return dev
+
+dev = std_dev(maxcuts, mean)
+
+print (mean, dev)
