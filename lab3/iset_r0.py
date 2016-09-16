@@ -8,10 +8,17 @@ def r0(V):
     max_deg = 0
     for v in V:
         s = 0
+        n = []
         for i in V:
             s = s + G[v][i]
+            if G[v][i]:
+                n = n + [i]
         if s == 0:
             V.remove(v)
+            return 1 + r0(V)
+        if s == 1: #R1
+            V.remove(v)
+            V.remove(n[0])
             return 1 + r0(V)
         if s > max_deg:
             u = v
