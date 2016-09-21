@@ -1,7 +1,11 @@
 import sys
 
+call_count = 0
 
 def r0(V):
+    global call_count
+    call_count += 1
+
     if not V:
         return 0
     u = -1
@@ -41,3 +45,4 @@ for line in f:
 V = range(n)
 
 print r0(V)
+print call_count
