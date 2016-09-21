@@ -2,7 +2,6 @@ import sys
 
 call_count = 0
 
-
 def r0(V, G):
     global call_count
     call_count += 1
@@ -16,8 +15,14 @@ def r0(V, G):
         n = []
         for i in V:
             s += G[v][i]
+            if G[v][i]:
+                n += [i]
         if s == 0:
             V.remove(v)
+            return 1 + r0(V, G)
+        if s == 1: #R1
+            V.remove(v)
+            V.remove(n[0])
             return 1 + r0(V, G)
         if s > max_deg:
             u = v
