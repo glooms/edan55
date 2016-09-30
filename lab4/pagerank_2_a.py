@@ -24,12 +24,14 @@ for i in xrange(len(P)):
 
 p = [float(1)/n] * n
 
-for _ in xrange(0, r):
+for _ in xrange(r):
+    temp = [0] * n
     for j in range(n):
-        temp = 0
         for i in range(n):
-            temp += p[i] * P[i][j]
-        p[j] = temp
+            temp[j] += p[i] * P[i][j]
+    p = temp
 
-rf = map(lambda x: float(x)/sum(p), p)
-print rf
+print p
+print sum(p)
+#rf = map(lambda x: float(x)/sum(p), p)
+#print rf

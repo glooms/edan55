@@ -15,13 +15,15 @@ for line in f:
     for i in range(0, len(s), 2):
         G[s[i]] += [s[i+1]]
 
+print G
+
 visited = [0] * n
 state = 0
 alpha = 0.85
 for i in xrange(r):
     visited[state] += 1
     if len(G[state]) != 0 and random.random() < alpha:
-        state = random.randint(0, len(G[state]) - 1)
+        state = G[state][random.randint(0, len(G[state]) - 1)]
     else:
         state = random.randint(0, n - 1)
 

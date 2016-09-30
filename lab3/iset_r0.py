@@ -6,14 +6,12 @@ call_count = 0
 def r0(V, G):
     global call_count
     call_count += 1
-
     if not V:
         return 0
     u = -1
     max_deg = 0
     for v in V:
         s = 0
-        n = []
         for i in V:
             s += G[v][i]
         if s == 0:

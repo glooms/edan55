@@ -22,9 +22,11 @@ def r0(V, G):
     call_count += 1
 
     if not V:
+        print 'This... is what\'s happening.'
         return 0
     u = -1
     max_deg = 0
+#    print V
     for v in V:
         s = 0
         n = []
@@ -33,9 +35,11 @@ def r0(V, G):
             if G[v][i]:
                 n += [i]
         if s == 0:
+            print 's: %d, v: %d' % (s, v)
             V.remove(v)
             return 1 + r0(V, G)
         if s == 2: #R2
+            print 's: %d, v: %d, u: %d, w: %d' % (s, v, n[0], n[1])
             V.remove(v)
             V.remove(n[0])
             V.remove(n[1])
@@ -44,12 +48,14 @@ def r0(V, G):
             new_G = add_z(v, n[0], n[1], V, G)
             return 1 + r0(V, new_G)
         if s == 1: #R1
+            print 's: %d, v: %d' % (s, v)
             V.remove(v)
             V.remove(n[0])
             return 1 + r0(V, G)
         if s > max_deg:
             u = v
             max_deg = s
+    print 's: %d, v: %d' % (max_deg, u)
     V.remove(u)
     a = r0(list(V), G)
     V1 = list(V)
@@ -63,6 +69,9 @@ f = open(sys.argv[1], 'r')
 n = int(f.readline())
 G = [[int(j) for j in line.strip().split(' ')] for line in f]
 V = range(n)
+
+print G[0]
+print G[1]
 
 print r0(V, G)
 print call_count
