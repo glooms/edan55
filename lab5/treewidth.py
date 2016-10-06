@@ -1,5 +1,6 @@
 import sys
-from nodes import Node
+from tree import Node, Tree
+
 
 def grparse():
     global G, n, m
@@ -34,36 +35,24 @@ def tdparse():
         else:
             if l[0] == 'b':
                 bag = map(int, l[1:])
-                B += [Node(bag[0], bag[1:])]
+                B += [(bag[0], bag[1:])]
             else:
                 (i, j) = map(int, l)
                 T[i] += [j]
                 T[j] += [i]
     for i in xrange(len(T)):
         if len(T[i]) == 1:
-            root = B[i]
+            root = i
             break
+    if not root:
+        root = 1
         
-def make_tree(node, p_index):
-    global B, T
-    for t in T[node.index]:
-        if p_index != t:
-            node.children += [B[t]]
-    for c in node.children:
-        make_tree(c, node.index)
-
-def print_tree(node, s, i):
-    s[i] += str(node.index) + ': '
-    s[i] += str([c.index for c in node.children]) + ' '
-    i += 1
-    for c in node.children:
-        print_tree(c, s, i)
-    return s 
-
 if len(sys.argv) != 2:
     sys.exit()
 
 file_name = sys.argv[1].split('.')[0]
+if file_name == 'gr-only':
+    sys.exit()
 
 G = [] # Graph
 (n, m) = (0, 0) # nodes and egdes
@@ -75,15 +64,23 @@ T = [] # Tree
 root = '' 
 grparse()
 tdparse()
-make_tree(root, 0)
-string = print_tree(root, [''] * n, 0)
+B.sort()
+debug = 0
 
-for s in string:
-    if s:
-        print s
+if not debug:
+    if not n:
+        print 'Empty graph'
+        sys.exit()
+    try:
+        tree = Tree(root, B, T)
+       # print tree.post_order(tree.root, [])
+       # tree.print_lvl_order()
+    except:
+        print 'Errors: ' + file_name
 
-if True:
+if not debug:
     sys.exit()
+
 print '========PARSED INFO========'
 
 print 'G'
@@ -95,5 +92,3 @@ for row in B:
 print 'T'
 for row in T:
     print row
-
-
