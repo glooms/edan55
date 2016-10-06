@@ -12,7 +12,7 @@ def grparse():
         if not flag:
             (n, m) = map(int, l[-2:])
             flag = True
-            G = [[] * (n + 1)]
+            G = [[] for _ in xrange(n + 1)]
         else:
             (i,j) = map(int, l)
             G[i] += [j]
@@ -29,7 +29,8 @@ def tdparse():
         if not flag:
             (b, w, v) = map(int, l[-3:])
             flag = True
-            T = [[0]*(b + 1) for _ in xrange(b + 1)]
+            T = [[] for _ in xrange(b + 1)]
+            B = [[]]
         else:
             if l[0] == 'b':
                 bag = map(int, l[1:])
@@ -38,18 +39,26 @@ def tdparse():
                 (i, j) = map(int, l)
                 T[i] += [j]
                 T[j] += [i]
-    for i in xrange(T):
+    for i in xrange(len(T)):
         if len(T[i]) == 1:
             root = B[i]
             break
         
-def make_tree(node, par):
+def make_tree(node, p_index):
     global B, T
     for t in T[node.index]:
-        if par >= 0   
+        if p_index != t:
+            node.children += [B[t]]
     for c in node.children:
-        make_tree(c)
-    
+        make_tree(c, node.index)
+
+def print_tree(node, s, i):
+    s[i] += str(node.index) + ': '
+    s[i] += str([c.index for c in node.children]) + ' '
+    i += 1
+    for c in node.children:
+        print_tree(c, s, i)
+    return s 
 
 if len(sys.argv) != 2:
     sys.exit()
@@ -63,9 +72,19 @@ G = [] # Graph
 B = [] # Bags
 T = [] # Tree
 (b, w, v) = (0, 0, 0) # # of bags, largest bag (width + 1), # of original vertices
-root = Node([])
+root = '' 
 grparse()
 tdparse()
+make_tree(root, 0)
+string = print_tree(root, [''] * n, 0)
+
+for s in string:
+    if s:
+        print s
+
+if True:
+    sys.exit()
+print '========PARSED INFO========'
 
 print 'G'
 for row in G:
