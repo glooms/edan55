@@ -13,11 +13,11 @@ def grparse():
         if not flag:
             (n, m) = map(int, l[-2:])
             flag = True
-            G = [[] for _ in xrange(n + 1)]
+            G = [0] * (n)
         else:
-            (i,j) = map(int, l)
-            G[i] += [j]
-            G[j] += [i]
+            (i,j) = map(lambda x : int(x) - 1, l)
+            G[i] += 1<<j
+            G[j] += 1<<i
 
 def tdparse():
     global B, T, b, w, v, root
@@ -30,14 +30,14 @@ def tdparse():
         if not flag:
             (b, w, v) = map(int, l[-3:])
             flag = True
-            T = [[] for _ in xrange(b + 1)]
-            B = [[]]
+            T = [[] for _ in xrange(b)]
+            B = []
         else:
             if l[0] == 'b':
-                bag = map(int, l[1:])
+                bag = map(lambda x : int(x) - 1, l[1:])
                 B += [(bag[0], bag[1:])]
             else:
-                (i, j) = map(int, l)
+                (i, j) = map(lambda x : int(x) - 1, l)
                 T[i] += [j]
                 T[j] += [i]
     for i in xrange(len(T)):
@@ -45,7 +45,7 @@ def tdparse():
             root = i
             break
     if not root:
-        root = 1
+        root = 0
         
 if len(sys.argv) != 2:
     sys.exit()
@@ -67,25 +67,25 @@ tdparse()
 B.sort()
 debug = 0
 
-if not debug:
-    if not n:
-        print 'Empty graph'
-        sys.exit()
-    try:
-        tree = Tree(root, B, T)
-       # print tree.post_order(tree.root, [])
-       # tree.print_lvl_order()
-    except:
-        print 'Errors: ' + file_name
+if not n:
+    print 'Empty graph'
+    sys.exit()
+
+        
+tree = Tree(root, B, T, G)
+#tree.print_lvl_order()
+#print
+tree.post_order(tree.root, [])
+print tree.max_i_set()
 
 if not debug:
     sys.exit()
 
-print '========PARSED INFO========'
+print '\n========PARSED INFO========\n'
 
 print 'G'
 for row in G:
-    print row
+    print bin(row)[2:].zfill(n)
 print 'B'
 for row in B:
     print row

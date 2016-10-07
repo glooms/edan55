@@ -9,8 +9,8 @@ class MaxIset:
 
     
     def __init__(self):
-        f = open(sys.argv[1], 'r')
         if True:
+            f = open(sys.argv[1].split('.')[0] + '.gr', 'r')
             flag = False
             for line in f:
                 l = line.strip().split(' ')
@@ -25,6 +25,7 @@ class MaxIset:
                     self.G[i] += 1<<(self.n - 1 - j)
                     self.G[j] += 1<<(self.n - 1 - i)
         else:
+            f = open(sys.argv[1], 'r')
             self.n = int(f.readline())
             self.G = [int(line.strip().replace(' ',''), base=2) for line in f]
     

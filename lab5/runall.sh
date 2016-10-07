@@ -2,5 +2,7 @@
 rm out
 for file in data/*.td
 do
-    python treewidth.py $file >> out
+    echo $file >> out
+    python fast_iset.py $file >> out
+    echo '' >> out
 done
