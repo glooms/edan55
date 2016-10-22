@@ -1,5 +1,5 @@
 import sys
-from tree import Node, Tree
+from tree import Node, Tree, translate
 
 
 def grparse():
@@ -47,7 +47,7 @@ def tdparse():
     if not root:
         root = 0
         
-if len(sys.argv) != 2:
+if len(sys.argv) < 2:
     sys.exit()
 
 file_name = sys.argv[1].split('.')[0]
@@ -67,6 +67,9 @@ tdparse()
 B.sort()
 debug = 0
 
+if len(sys.argv) == 3 and int(sys.argv[2]) != w:
+    sys.exit()
+
 if not n:
     print 'Empty graph'
     sys.exit()
@@ -75,8 +78,13 @@ if not n:
 tree = Tree(root, B, T, G)
 #tree.print_lvl_order()
 #print
-tree.post_order(tree.root, [])
-print tree.max_i_set()
+tree.post_order(tree.root)
+max_i_set = tree.max_i_set()[0]
+print file_name + ' %d %d %d' % (n, w, max_i_set)
+
+#for (i, t) in enumerate(tree.table):
+#    print str(i) + ': ',
+#    print map(lambda (x, y) : (x, translate(y)), t)
 
 if not debug:
     sys.exit()

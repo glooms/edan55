@@ -6,7 +6,7 @@ class Tree:
         Node.G = G
         self.B = B
         self.T = T
-        self.table = [[]] * len(B)
+        self.table = [[] for _  in xrange(len(B))]
         self.make_tree(self.root, -1)
     
     def make_tree(self, node, p_index):
@@ -37,17 +37,13 @@ class Tree:
             self.level_order(c, s, i)
         return s
 
-    def post_order(self, node, l):
+    def post_order(self, node):
         for c in node.children:
-            self.post_order(c, l)
-        l += [node.index]
+            self.post_order(c)
         i_sets = node.i_sets()
-#        print node.index,
-#        print map(lambda x : bin(x[1])[2:].zfill(8), i_sets)
-#        print [translate(i[1]) for i in i_sets]
         if not node.children:
             self.table[node.index] = i_sets
-            return l
+            return
         for U in i_sets:
             c_sum = [0, 0]
             for c in node.children:
@@ -62,7 +58,7 @@ class Tree:
                     c_sum[0] += t[0]
                     c_sum[1] += t[1]
             self.table[node.index] += [(U[0] + c_sum[0], U[1] + c_sum[1])]
-        return l
+        return
 
 class Node:
     G = []

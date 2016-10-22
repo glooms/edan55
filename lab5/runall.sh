@@ -1,8 +1,10 @@
 #!/bin/bash
 rm out
+for i in {1..20}
+do
 for file in data/*.td
 do
-    echo $file >> out
-    python fast_iset.py $file >> out
-    echo '' >> out
+    echo $file + ' ' + $i
+    python treewidth.py $file $i >> out
+done
 done
